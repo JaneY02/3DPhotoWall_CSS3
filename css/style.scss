@@ -1,0 +1,246 @@
+$cubeWidth:250px;
+$sphereWidth:400px;
+$index:4;
+$photoWidth:64px * $index;
+$photoHeight:36px * $index;
+$photoRadius:98px * $index;
+
+@mixin backface-visibility($value){
+	-webkit-backface-visibility: $value;
+			backface-visibility: $value;
+}
+@mixin filter($num){
+	-webkit-filter: $num;
+	        filter: $num;
+}
+@mixin transform-style($value){
+	-webkit-transform-style: $value;
+	   -moz-transform-style: $value;
+	        transform-style: $value;
+}
+@mixin transform-origin($num){
+	-webkit-transform-origin: $num;
+	        transform-origin: $num;
+}
+@mixin transform($num){
+	-webkit-transform: $num;
+			transform: $num;
+}
+@mixin animation($num){
+	-webkit-animation: $num;
+			animation: $num;
+}
+@mixin animation($value){
+	-webkit-animation: $value;
+			animation: $value;
+}
+@mixin perspective($num){
+	-webkit-perspective: $num;
+	   -moz-perspective: $num;
+			perspective: $num;
+}
+@mixin transition($value){
+	-webkit-transition: $value;
+	   -moz-transition: $value;
+			transition: $value;
+}
+@mixin perspective-origin($value){
+	-webkit-perspective-origin: $value;
+			perspective-origin: $value;
+}
+
+@mixin keyframes($name){
+	@keyframes #{$name}{
+		@content;
+	}
+	@-webkit-keyframes #{$name}{
+		@content;
+	}
+}
+
+@include keyframes(fastspin){
+	0%{
+		@include transform(rotateX(-33.5deg) rotateY(45deg));
+	}
+	40%, to{
+		@include transform(rotateX(-33.5deg) rotateY(-315deg));
+	}
+}
+@include keyframes(ballRotate){
+	0%{
+		@include transform(rotateX(-45deg) rotateY(70deg));
+	}
+	100%{
+		@include transform(rotateX(-45deg) rotateY(430deg));
+	}
+}
+@include keyframes(photoRotate){
+	0%{
+		@include transform(rotateY(0deg));
+	}
+	16.7%{
+		@include transform(rotateY(60deg));
+	}
+	33.3%{
+		@include transform(rotateY(120deg));
+	}
+	50%{
+		@include transform(rotateY(180deg));
+	}
+	66.7%{
+		@include transform(rotateY(240deg));
+	}
+	83.3%{
+		@include transform(rotateY(300deg));
+	}
+	100%{
+		@include transform(rotateY(360deg));
+	}
+}
+
+html,body{
+	width: 100%;
+	height: 100%;
+}
+.demo-cube{
+	position: relative;
+	width: 100%;
+	height: 50%;
+	background-color: #FBD2E5;
+	.cube-inner{
+		display: block;
+		// center
+		position: absolute;
+		top: 50%;
+		left: 30%;
+		margin-top: -$cubeWidth/2;
+		margin-left: -$cubeWidth/2;
+		@include transform-style(preserve-3d);
+		@include transform-origin($cubeWidth/2 $cubeWidth/2);
+		@include transform(rotateX(-33.5deg) rotateY(45deg));
+		@include animation(fastspin 8s ease-in-out infinite);
+		li{
+			position: absolute;
+			display: block;
+			width: $cubeWidth;
+			height: $cubeWidth;
+			background: radial-gradient(transparent 30%, rgba(0, 0, 0, .8) 100%);
+			&:before{
+				content: "";
+				display: block;
+				position: absolute;
+				width: $cubeWidth;
+				height: $cubeWidth;
+				background-color: rgba(255, 255, 255, .2);
+				@include backface-visibility(hidden);
+				@include filter(10px);
+			}
+			img{
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.top{
+			@include transform(rotateX(90deg) translateZ($cubeWidth/2));
+		}
+		.bottom{
+			@include transform(rotateX(-90deg) translateZ($cubeWidth/2));
+		}
+		.front{
+			@include transform(translateZ($cubeWidth/2));
+		}
+		.back{
+			@include transform(rotateX(-180deg) translateZ($cubeWidth/2));
+		}
+		.left{
+			@include transform(rotateY(-90deg) translateZ($cubeWidth/2));
+		}
+		.right{
+			@include transform(rotateY(90deg) translateZ($cubeWidth/2));
+		}
+	}
+	.sphere-inner{
+		display: block;
+		position: absolute;
+		top: 50%;
+		left: 70%;
+		margin-top: -$sphereWidth/2;
+		margin-left: -$sphereWidth/2;
+		@include transform-style(preserve-3d);
+		@include transform-origin($sphereWidth/2 $sphereWidth/2);
+		@include transform(rotateX(-45deg) rotateY(70deg));
+		@include animation(ballRotate 10s linear infinite);
+		li{
+			width: $sphereWidth;
+			height: $sphereWidth;
+			position: absolute;
+			top: 0;
+			left: 0;
+			border-radius: 100%;
+			background: radial-gradient(transparent 30%, rgba(0, 0, 0, .3) 100%);
+			img{
+				width: 100%;
+				height: 100%;
+				border-radius: 100%;
+			}
+		}
+		.a{
+			@include transform(rotateY(-90deg));
+		}
+		.b{
+			@include transform(rotateY(45deg));
+		}
+		.c{
+			@include transform(rotateY(315deg));
+		}
+	}
+}
+#stage{
+	position: relative;
+	background: #D8BCF7;
+	width: 100%;
+	height: 50%;
+	@include perspective(800px);
+	@include perspective-origin(top);
+}
+#container{
+	position: absolute;
+	left: 50%;
+	top: 29%;
+	width: $photoWidth;
+	height: $photoHeight;
+	margin-left: -$photoWidth/2;
+	margin-top: -$photoHeight/2;
+	// zoom: 4;
+	@include transform-style(preserve-3d);
+	@include animation(photoRotate 25s ease-in-out infinite);
+	.example{
+		position: absolute;
+		width: $photoWidth;
+		height: $photoHeight;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+		// background-color: rgba(153, 204, 204, 0.8);
+		img{
+			width: 100%;
+			height: 100%;
+		}
+		&:nth-child(1){
+			@include transform(rotateY(0deg) translateZ($photoRadius));
+		}
+		&:nth-child(2){
+			@include transform(rotateY(60deg) translateZ($photoRadius));
+		}
+		&:nth-child(3){
+			@include transform(rotateY(120deg) translateZ($photoRadius));
+		}
+		&:nth-child(4){
+			@include transform(rotateY(180deg) translateZ($photoRadius));
+		}
+		&:nth-child(5){
+			@include transform(rotateY(240deg) translateZ($photoRadius));
+		}
+		&:nth-child(6){
+			@include transform(rotateY(300deg) translateZ($photoRadius));
+		}
+	}
+}
